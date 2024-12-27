@@ -14,44 +14,33 @@ public class FinanceManager {
 
 	public void addTransaction(String type, double amount, String date, String description) {
 		try {
-			if (type.equals("income") | type.equals("expense")) {
-				Transaction transaction = new Transaction(transactionCounter, type, amount, date, description);
-				transactions.add(transaction);
-				transactionCounter++;
-				System.out.println("Txn added successfully");
-			} else {
-				System.out.println("Invalid Transaction Type. Must be 'income' or 'expense'.");
-			}
+			Transaction transaction = new Transaction(transactionCounter, type, amount, date, description);
+			transactions.add(transaction);
+			transactionCounter++;
+			System.out.println("Transaction added successfully!!");
 		} catch (Exception e) {
 			System.out.println("Error while adding txns " + e.getStackTrace());
 		}
 	}
 
+	// view txns with for Each and Method Reference
 	public void viewTransactions() {
 		if (!transactions.isEmpty()) {
-			for (Transaction transaction : transactions) {
-				System.out.println("Transaction Details : " + transaction.getDetails());
-			}
+			transactions.forEach(System.out::println);
 		} else {
 			System.out.println("No transactions");
 		}
 	}
 
+	// calculate total by type using Stream API
 	public double getTotalByType(String type) {
-		int totalAmount = 0;
-		for (Transaction transaction : transactions) {
-			if (transaction.getType().equals(type)) {
-				totalAmount += transaction.getAmount();
-			}
-		}
-		return totalAmount;
+		return transactions.stream().filter(transaction -> transaction.getType().equals(type))
+				.mapToDouble(Transaction::getAmount).sum();
 	}
 
 	public double getBalance() {
-		double balance;
 		double totalIncome = getTotalByType("income");
 		double totalExpense = getTotalByType("expense");
-		balance = totalIncome - totalExpense;
-		return balance;
+		return totalIncome - totalExpense;
 	}
 }

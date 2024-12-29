@@ -2,6 +2,7 @@ package application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FinanceManager {
 
@@ -12,9 +13,10 @@ public class FinanceManager {
 		this.transactions = new ArrayList<Transaction>();
 	}
 
-	public void addTransaction(String type, double amount, String date, String description) {
+	public void addTransaction(String type, double amount, String date, String description,
+			TransactionCategory category) {
 		try {
-			Transaction transaction = new Transaction(transactionCounter, type, amount, date, description);
+			Transaction transaction = new Transaction(transactionCounter, type, amount, date, description, category);
 			transactions.add(transaction);
 			transactionCounter++;
 			System.out.println("Transaction added successfully!!");
@@ -26,7 +28,7 @@ public class FinanceManager {
 	// view txns with for Each and Method Reference
 	public void viewTransactions() {
 		if (!transactions.isEmpty()) {
-			transactions.forEach(System.out::println);
+			transactions.stream().forEach(System.out::println);
 		} else {
 			System.out.println("No transactions");
 		}
@@ -43,4 +45,15 @@ public class FinanceManager {
 		double totalExpense = getTotalByType("expense");
 		return totalIncome - totalExpense;
 	}
+
+	public void viewTransactionsByCategory(TransactionCategory category) {
+		transactions.stream().filter(transaction -> transaction.getCategory().equals(category))
+				.forEach(System.out::println);
+	}
+
+	public Optional<Transaction> getTransactionById(int id) {
+		return transactions.stream().filter(transaction -> transaction.getId() == id).findFirst(); // Returns
+																									// Optional<Transaction>
+	}
+
 }

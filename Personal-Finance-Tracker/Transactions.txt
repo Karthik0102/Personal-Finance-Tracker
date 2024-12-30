@@ -1,0 +1,5 @@
+Transaction [id=1, type=income, amount=10000.0, date=2024-08-31, description=Salary Credited, category=SALARY]
+Transaction [id=3, type=expense, amount=50.0, date=2024-09-01, description=Wifi Payment, category=BILLS]
+Transaction [id=2, type=expense, amount=500.0, date=2024-09-04, description=Room rent paid, category=BILLS]
+Transaction [id=4, type=expense, amount=500.0, date=2024-09-25, description=Day out with Friends, category=FOOD]
+Transaction [id=5, type=income, amount=200.0, date=2024-09-27, description=Friend Deposited, category=ENTERTAINMENT]

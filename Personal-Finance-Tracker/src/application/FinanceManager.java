@@ -1,6 +1,12 @@
 package application;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,4 +62,60 @@ public class FinanceManager {
 																									// Optional<Transaction>
 	}
 
+	public double calculateBalance() {
+		double balance = 0.0;
+		for (Transaction transaction : transactions) {
+			if (transaction.getType().equalsIgnoreCase("income")) {
+				balance += transaction.getAmount();
+			} else if (transaction.getType().equalsIgnoreCase("expense")) {
+				balance -= transaction.getAmount();
+			}
+		}
+		return balance;
+	}
+
+	public void saveTransactions(String fileName) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+			for (Transaction transaction : transactions) {
+				writer.write(transaction.toString());
+				writer.newLine();
+			}
+			System.out.println("Transactions saved to file: " + fileName);
+		} catch (IOException e) {
+			System.out.println("Error saving transactions: " + e.getStackTrace());
+		}
+	}
+
+	public void sortTransactionsByDate() {
+		if (!transactions.isEmpty()) {
+			transactions.sort(Comparator.comparing(Transaction::getDate));
+			System.out.println("Transactions sorted by date.");
+		} else {
+			System.out.println("No Transactions.");
+		}
+	}
+
+	public void loadTransactionsFromFile(String fileName) throws IOException {
+		try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+			transactions.clear();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+			}
+			System.out.println("Transactions loaded from file: " + fileName);
+		} catch (IOException e) {
+			System.out.println("Error loading transactions: " + e.getMessage());
+		}
+	}
+
+	public void removeTransaction(int id) {
+		Transaction toRemove = transactions.stream().filter(t -> t.getId() == id).findFirst().orElse(null);
+		if (toRemove != null) {
+			transactions.remove(toRemove);
+			System.out.println("Transaction removed successfully!");
+		} else {
+			System.out.println("Transaction with ID " + id + " not found.");
+		}
+
+	}
 }
